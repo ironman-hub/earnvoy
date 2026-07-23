@@ -82,12 +82,15 @@ export default function Feed() {
         </div>
       )}
 
-      <div className="mt-10 text-xs text-ink/40 max-w-2xl">
-        earnvoy connects travellers and senders only. We are not a courier, escrow service, payment
-        guarantor, or insurance provider, and we don't inspect items or handle customs declarations.
-        Meet in public places, photograph items, exchange receipts, and use a written agreement.
-        Travellers are responsible for checking what they carry; senders remain legally responsible
-        for their shipment. Read the full <Link to="/terms" className="underline">terms</Link>.
+      <div className="mt-10 max-w-2xl">
+        <p className="text-xs font-semibold text-ink/60 mb-1">Terms &amp; Conditions</p>
+        <p className="text-xs text-ink/40">
+          earnvoy connects travellers and senders only. We are not a courier, escrow service, payment
+          guarantor, or insurance provider, and we don't inspect items or handle customs declarations.
+          Meet in public places, photograph items, exchange receipts, and use a written agreement.
+          Travellers are responsible for checking what they carry; senders remain legally responsible
+          for their shipment. Read the full <Link to="/terms" className="underline">Terms &amp; Conditions</Link>.
+        </p>
       </div>
 
       {/* Footer with these links is desktop-only, so mobile users get a compact version here */}

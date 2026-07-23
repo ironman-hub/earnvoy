@@ -23,7 +23,7 @@ export default function ListingCard({ listing, index = 0 }) {
     >
       <Link
         to={`/listing/${listing.id}`}
-        className="grid grid-cols-[auto_1fr_auto] items-center gap-4 bg-ink text-paper font-mono px-4 py-3 rounded-md shadow-sm hover:shadow-md transition"
+        className="grid grid-cols-[auto_1fr_auto] items-center gap-4 bg-inkDeep text-paper font-mono px-4 py-3 rounded-md shadow-sm hover:shadow-md transition"
       >
         <div className="text-[10px] sm:text-xs uppercase tracking-wider px-2 py-1 rounded bg-paper/10">
           {isTraveller ? "Traveller" : "Sender"}
@@ -46,11 +46,17 @@ export default function ListingCard({ listing, index = 0 }) {
           )}
         </div>
 
-        <div className="text-[10px] sm:text-xs text-paper/70 text-right">
-          {isTraveller && listing.availableSpaceKg ? `${listing.availableSpaceKg}kg free` : ""}
+        <div className="text-right">
+          {isTraveller && listing.availableSpaceKg ? (
+            <span className="text-route font-display font-bold text-sm sm:text-base whitespace-nowrap">
+              {listing.availableSpaceKg}kg free
+            </span>
+          ) : (
+            <span className="text-[10px] sm:text-xs text-paper/70">&nbsp;</span>
+          )}
           <div className="hidden sm:flex gap-1 justify-end mt-1 flex-wrap max-w-[220px]">
             {(listing.categories || []).slice(0, 3).map((c) => (
-              <span key={c} className="bg-paper/10 px-1.5 py-0.5 rounded text-[10px] uppercase">
+              <span key={c} className="bg-paper/10 px-1.5 py-0.5 rounded text-[10px] uppercase text-paper/70">
                 {CATEGORY_LABEL[c] || c}
               </span>
             ))}

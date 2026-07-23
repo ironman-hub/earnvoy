@@ -2,9 +2,8 @@ const { z } = require("zod");
 
 const registerSchema = z.object({
   fullName: z.string().min(2, "Enter your full legal name as it appears on your passport or ID.").max(100),
-  username: z.string().min(3).max(24).regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores."),
   email: z.string().email(),
-  phone: z.string().min(7).max(20),
+  phone: z.string().regex(/^\+[1-9]\d{7,14}$/, "Enter a valid phone number including country code."),
   password: z.string().min(8, "Password must be at least 8 characters."),
   acceptedTerms: z.literal(true, { errorMap: () => ({ message: "You must accept the terms and conditions." }) }),
 });

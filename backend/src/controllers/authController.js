@@ -4,6 +4,7 @@ const prisma = require("../config/prisma");
 const config = require("../config");
 const { registerSchema, loginSchema } = require("../utils/validators");
 const { randomToken } = require("../utils/tokens");
+const { generateUniqueUsername } = require("../utils/username");
 const emailService = require("../services/emailService");
 const smsService = require("../services/smsService");
 const { logEvent } = require("../services/auditService");
@@ -24,12 +25,13 @@ async function register(req, res, next) {
     const data = registerSchema.parse(req.body);
 
     const existing = await prisma.user.findFirst({
-      where: { OR: [{ email: data.email }, { username: data.username }, { phone: data.phone }] },
+      where: { OR: [{ email: data.email }, { phone: data.phone }] },
     });
     if (existing) {
-      return res.status(409).json({ error: "An account with that email, username, or phone already exists." });
+      return res.status(409).json({ error: "An account with that email or phone number already exists." });
     }
 
+    const username = await generateUniqueUsername();
     const passwordHash = await bcrypt.hash(data.password, 12);
     const emailVerifyToken = randomToken();
     const phoneOtp = smsService.generateOtp();
@@ -38,7 +40,7 @@ async function register(req, res, next) {
     const user = await prisma.user.create({
       data: {
         fullName: data.fullName,
-        username: data.username,
+        username,
         email: data.email,
         phone: data.phone,
         passwordHash,

@@ -188,6 +188,72 @@ async function main() {
   console.log(`Demo traveller account ready: ${demoUser.email} / password: ${demoPassword}`);
   console.log(`Demo sender account ready: demo-buyer@earnvoy.com / password: EarnvoyDemo123!`);
   console.log("Both demo accounts are pre-verified with paid listings, a completed match, and receipts.");
+
+  // ---------- A second traveller with a fresh, paid, unclaimed listing ----------
+  // Distinct from demoUser's listings above - this one has NOT been unlocked by
+  // anyone yet, so you can log in as any account and test the "pay to unlock
+  // contact details" flow end-to-end without it already being spoken for.
+  const demo2Email = process.env.DEMO2_EMAIL || "demo2@earnvoy.com";
+  const demo2Password = process.env.DEMO2_PASSWORD || "EarnvoyDemo123!";
+
+  const demo2User = await prisma.user.upsert({
+    where: { email: demo2Email },
+    update: {},
+    create: {
+      fullName: "Demo Traveller Two",
+      email: demo2Email,
+      username: "earnvoy_demo2",
+      phone: "+447700900789",
+      passwordHash: await bcrypt.hash(demo2Password, 12),
+      role: "USER",
+      emailVerified: true,
+      phoneVerified: true,
+      isVerifiedBadge: true,
+      termsAcceptedAt: new Date(),
+      termsVersion: "2026-07-23",
+    },
+  });
+
+  const unclaimedListing = await prisma.listing.upsert({
+    where: { id: "00000000-0000-0000-0000-000000000007" },
+    update: {},
+    create: {
+      id: "00000000-0000-0000-0000-000000000007",
+      type: "TRAVELLER",
+      ownerId: demo2User.id,
+      departureAirport: "CPT",
+      departureCountry: "South Africa",
+      destinationAirport: "LHR",
+      destinationCountry: "United Kingdom",
+      departureDate: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000),
+      arrivalDate: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000 + 13 * 60 * 60 * 1000),
+      availableSpaceKg: 15,
+      categories: ["GIFTS", "CLOTHING", "FOOD"],
+      certifiedNoProhibitedGoods: true,
+      status: "LIVE",
+      listingFeePaid: true,
+    },
+  });
+
+  await prisma.payment.upsert({
+    where: { id: "00000000-0000-0000-0000-000000000008" },
+    update: {},
+    create: {
+      id: "00000000-0000-0000-0000-000000000008",
+      userId: demo2User.id,
+      listingId: unclaimedListing.id,
+      type: "LISTING_FEE",
+      method: "STRIPE",
+      amount: 1.75,
+      currency: "GBP",
+      status: "SUCCEEDED",
+      receiptNumber: "EV-DEMO-0004",
+    },
+  });
+
+  console.log(`Second demo traveller ready: ${demo2Email} / password: ${demo2Password}`);
+  console.log("Its CPT -> LHR listing is live and paid, but not yet unlocked by anyone -");
+  console.log("log in as any other account and pay to unlock it to see that flow end to end.");
   console.log("IMPORTANT: change or remove these demo accounts before going live in production.");
 }
 

@@ -30,11 +30,17 @@ export default function Login() {
     >
       <h1 className="text-2xl font-bold mb-1">Log in</h1>
       <p className="text-sm text-ink/60 mb-6">Travellers, senders, and admins all sign in here - your account decides what you see.</p>
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <input className="input" placeholder="Email or username" value={form.emailOrUsername}
-          onChange={(e) => setForm({ ...form, emailOrUsername: e.target.value })} />
-        <input className="input" type="password" placeholder="Password" value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })} />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="text-sm font-medium block mb-1">Email or username</label>
+          <input className="input" value={form.emailOrUsername}
+            onChange={(e) => setForm({ ...form, emailOrUsername: e.target.value })} />
+        </div>
+        <div>
+          <label className="text-sm font-medium block mb-1">Password</label>
+          <input className="input" type="password" value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })} />
+        </div>
         {error && <p className="text-alert text-sm">{error}</p>}
         <button className="btn-primary w-full" disabled={loading}>{loading ? "Logging in..." : "Log in"}</button>
       </form>

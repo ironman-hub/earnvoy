@@ -87,7 +87,7 @@ export default function Feed() {
         guarantor, or insurance provider, and we don't inspect items or handle customs declarations.
         Meet in public places, photograph items, exchange receipts, and use a written agreement.
         Travellers are responsible for checking what they carry; senders remain legally responsible
-        for their shipment. Read the full <Link to="/terms" className="underline">Terms &amp; Conditions</Link>.
+        for their shipment. Read the full <Link to="/terms" className="underline">terms</Link>.
       </div>
 
       {/* Footer with these links is desktop-only, so mobile users get a compact version here */}

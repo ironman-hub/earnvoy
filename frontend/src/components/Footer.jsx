@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import Logo from "./Logo.jsx";
 import SocialLinks from "./SocialLinks.jsx";
 
@@ -11,14 +10,8 @@ export default function Footer() {
           <Logo className="text-lg" />
           <SocialLinks />
         </div>
-        <p className="text-xs font-semibold text-ink/60">Terms &amp; Conditions</p>
-        <p className="max-w-xl text-xs text-ink/40">
-          earnvoy connects travellers and senders only. We are not a courier, escrow service,
-          payment guarantor, or insurance provider, and we don't inspect items or handle customs
-          declarations. Meet in public places, photograph items, exchange receipts, and use a
-          written agreement. Travellers are responsible for checking what they carry; senders
-          remain legally responsible for their shipment. Read the full{" "}
-          <Link to="/terms" className="underline">Terms &amp; Conditions</Link>.
+        <p className="max-w-xl text-xs text-ink/40 mt-1">
+          earnvoy connects users only - not a courier, escrow, or insurance provider.
         </p>
       </div>
     </footer>

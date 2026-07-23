@@ -42,7 +42,7 @@ h2 { font-weight: 600; }
 
 /* Reserve space so content isn't hidden behind the mobile bottom nav */
 .pb-safe-nav {
-  padding-bottom: calc(5.75rem + env(safe-area-inset-bottom));
+  padding-bottom: calc(4.75rem + env(safe-area-inset-bottom));
 }
 
 @media (min-width: 768px) {
@@ -52,3 +52,13 @@ h2 { font-weight: 600; }
 /* Hide default scrollbar arrows on horizontal filter/category scrollers, keep them usable */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Floating buttons (scroll-to-top, WhatsApp) that must clear the mobile bottom nav -
+   uses a real calc() so it accounts for the phone's home-indicator safe-area inset,
+   unlike a flat Tailwind bottom-24 which doesn't know about that inset at all. */
+.float-above-nav {
+  bottom: calc(5rem + env(safe-area-inset-bottom));
+}
+@media (min-width: 768px) {
+  .float-above-nav { bottom: 1.5rem; }
+}

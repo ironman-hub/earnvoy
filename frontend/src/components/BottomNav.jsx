@@ -39,15 +39,15 @@ function Item({ to, label, IconCmp }) {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `flex flex-col items-center justify-center flex-1 py-2 gap-0.5 text-[11px] font-medium transition ${
+        `flex flex-col items-center justify-center flex-1 min-w-0 py-1.5 gap-0.5 text-[10px] leading-none font-medium transition ${
           isActive ? "text-signal" : "text-ink/50"
         }`
       }
     >
       {({ isActive }) => (
         <>
-          <IconCmp className={`w-6 h-6 transition ${isActive ? "scale-110" : ""}`} />
-          {label}
+          <IconCmp className={`w-5 h-5 shrink-0 transition ${isActive ? "scale-110" : ""}`} />
+          <span className="truncate max-w-full">{label}</span>
         </>
       )}
     </NavLink>
@@ -62,25 +62,28 @@ export default function BottomNav() {
       className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-line flex flex-col"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <div className="flex items-center justify-center gap-5 py-1.5 border-b border-line/60">
-        <SocialLinks iconClassName="w-4 h-4" />
+      <div className="flex items-center justify-center gap-4 py-1 border-b border-line/60">
+        <SocialLinks className="gap-1" iconClassName="w-[18px] h-[18px] p-1.5 -m-1.5" />
         <a
           href={SUPPORT_WHATSAPP_LINK}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Chat with us on WhatsApp"
-          className="flex items-center justify-center"
+          className="flex items-center justify-center p-1.5 -m-1.5"
           style={{ color: "#25D366" }}
         >
-          <FaWhatsapp className="w-4 h-4" />
+          <FaWhatsapp className="w-[18px] h-[18px]" />
         </a>
       </div>
       <div className="flex">
         <Item to="/" label="Feed" IconCmp={Icon.feed} />
         <Item to="/create-listing" label="Post" IconCmp={Icon.post} />
-        <Item to="/dashboard" label="Dashboard" IconCmp={Icon.dashboard} />
+        {user ? (
+          <Item to="/dashboard" label="Dashboard" IconCmp={Icon.dashboard} />
+        ) : (
+          <Item to="/login" label="Login" IconCmp={Icon.account} />
+        )}
         {user?.role === "ADMIN" && <Item to="/admin" label="Admin" IconCmp={Icon.admin} />}
-        <Item to={user ? "/dashboard" : "/login"} label="Account" IconCmp={Icon.account} />
       </div>
     </nav>
   );

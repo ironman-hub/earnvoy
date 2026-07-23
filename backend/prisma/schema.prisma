@@ -1,0 +1,250 @@
+// earnvoy database schema
+// Run `npx prisma migrate dev --name init` after setting DATABASE_URL in .env
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ListingType {
+  TRAVELLER // has space, offering to carry
+  SENDER    // has goods, looking for a traveller
+}
+
+enum ListingStatus {
+  LIVE      // visible on the public feed
+  PENDING   // a buyer has unlocked contact details - shown to users as "Secured"
+  MATCHED   // traveller and sender have agreed, removed from feed permanently
+  REMOVED   // deleted by the owner or by moderation
+  EXPIRED   // departure date passed with no match
+}
+
+enum PaymentType {
+  LISTING_FEE // £1.75 to post a listing
+  UNLOCK_FEE  // £1.75 to unlock contact details
+}
+
+enum PaymentMethod {
+  STRIPE
+  ECOCASH
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum ItemCategory {
+  DOCUMENTS
+  CLOTHING
+  ELECTRONICS
+  GIFTS
+  FOOD
+  MEDICINES
+  FRAGILE
+  OTHER
+}
+
+enum ReportStatus {
+  OPEN
+  REVIEWING
+  RESOLVED
+  DISMISSED
+}
+
+model User {
+  id                String    @id @default(uuid())
+  // Full legal name as it appears on passport/ID. Never shown publicly -
+  // only the username is shown until contact details are unlocked.
+  fullName          String
+  username          String    @unique
+  email             String    @unique
+  phone             String    @unique
+  passwordHash      String
+  role              Role      @default(USER)
+
+  emailVerified     Boolean   @default(false)
+  emailVerifyToken  String?
+  emailVerifyExpiry DateTime?
+
+  phoneVerified     Boolean   @default(false)
+  phoneOtpHash      String?
+  phoneOtpExpiry    DateTime?
+
+  // Verified badge is granted only once BOTH email and phone are verified
+  isVerifiedBadge   Boolean   @default(false)
+
+  termsAcceptedAt   DateTime?
+  termsVersion      String?
+
+  isSuspended       Boolean   @default(false)
+  isDeleted         Boolean   @default(false)
+  deletedAt         DateTime?
+
+  passwordResetToken  String?
+  passwordResetExpiry DateTime?
+
+  stripeCustomerId  String?
+
+  listings          Listing[]
+  unlocks           ContactUnlock[]
+  payments          Payment[]
+  reportsFiled      Report[]        @relation("ReportsFiled")
+  reportsAgainst    Report[]        @relation("ReportsAgainst")
+  auditLogs         AuditLog[]
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([email])
+  @@index([username])
+}
+
+model Listing {
+  id                  String        @id @default(uuid())
+  type                ListingType
+  owner               User          @relation(fields: [ownerId], references: [id])
+  ownerId             String
+
+  departureAirport    String  // IATA code
+  departureCountry    String?
+  destinationAirport  String  // IATA code
+  destinationCountry   String?
+  departureDate       DateTime
+  arrivalDate         DateTime
+
+  // Traveller: kg they have available. Sender: kg/size they need to send.
+  availableSpaceKg    Float?
+
+  categories          ItemCategory[]
+
+  // Sender-only: an incentive/reward offered to attract a traveller
+  incentiveOffer      String?
+
+  notes               String?
+
+  status              ListingStatus @default(LIVE)
+  listingFeePaid      Boolean       @default(false)
+
+  certifiedNoProhibitedGoods Boolean @default(false)
+
+  matchedWithUserId   String?
+
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  removedAt           DateTime?
+
+  unlocks             ContactUnlock[]
+  payments            Payment[]
+  reports             Report[]
+
+  @@index([status])
+  @@index([departureAirport, destinationAirport])
+  @@index([ownerId])
+}
+
+// Records who paid to unlock a listing owner's contact details
+model ContactUnlock {
+  id            String    @id @default(uuid())
+  listing       Listing   @relation(fields: [listingId], references: [id])
+  listingId     String
+  buyer         User      @relation(fields: [buyerId], references: [id])
+  buyerId       String
+  payment       Payment?  @relation(fields: [paymentId], references: [id])
+  paymentId     String?   @unique
+
+  // Traveller/sender who owns the listing accepts or rejects this specific request.
+  // If they "don't agree to agree", reject sets this false and the listing goes back
+  // to LIVE as a fresh opportunity for other buyers.
+  accepted      Boolean?  // null = pending decision
+  decidedAt     DateTime?
+
+  refunded      Boolean   @default(false)
+  refundedAt    DateTime?
+
+  createdAt     DateTime  @default(now())
+
+  @@index([listingId])
+  @@index([buyerId])
+}
+
+model Payment {
+  id                    String        @id @default(uuid())
+  user                  User          @relation(fields: [userId], references: [id])
+  userId                String
+  listing                Listing?      @relation(fields: [listingId], references: [id])
+  listingId              String?
+
+  type                  PaymentType
+  method                PaymentMethod
+  amount                Float
+  currency              String        @default("GBP")
+  status                PaymentStatus @default(PENDING)
+
+  stripePaymentIntentId String?
+  stripeCheckoutId      String?
+
+  paynowReference       String?
+  paynowPollUrl         String?
+
+  receiptNumber         String?       @unique
+  receiptPdfPath        String?
+  receiptEmailedAt      DateTime?
+
+  contactUnlock         ContactUnlock?
+
+  createdAt             DateTime      @default(now())
+  updatedAt              DateTime     @updatedAt
+
+  @@index([userId])
+  @@index([listingId])
+}
+
+model Report {
+  id            String       @id @default(uuid())
+  reporter      User         @relation("ReportsFiled", fields: [reporterId], references: [id])
+  reporterId    String
+  targetUser    User?        @relation("ReportsAgainst", fields: [targetUserId], references: [id])
+  targetUserId  String?
+  listing       Listing?     @relation(fields: [listingId], references: [id])
+  listingId     String?
+
+  reason        String
+  details       String?
+  status        ReportStatus @default(OPEN)
+
+  createdAt     DateTime     @default(now())
+  resolvedAt    DateTime?
+  resolvedNote  String?
+
+  @@index([status])
+}
+
+// Immutable audit trail for admin actions and sensitive events -
+// exportable for law-enforcement requests.
+model AuditLog {
+  id          String   @id @default(uuid())
+  actor       User?    @relation(fields: [actorId], references: [id])
+  actorId     String?
+  action      String   // e.g. "LISTING_CREATED", "CONTACT_UNLOCKED", "USER_SUSPENDED"
+  targetType  String   // "User" | "Listing" | "Payment" | ...
+  targetId    String?
+  metadata    Json?
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+
+  @@index([action])
+  @@index([actorId])
+  @@index([createdAt])
+}

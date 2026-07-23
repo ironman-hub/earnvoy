@@ -7,6 +7,7 @@ import NavBar from "./components/NavBar.jsx";
 import BottomNav from "./components/BottomNav.jsx";
 import Footer from "./components/Footer.jsx";
 import TermsGate from "./components/TermsGate.jsx";
+import WhatsAppButton from "./components/WhatsAppButton.jsx";
 import { RequireAuth, RequireAdmin } from "./components/Guards.jsx";
 
 import Feed from "./pages/Feed.jsx";
@@ -52,6 +53,7 @@ export default function App() {
 
       <Footer />
       <BottomNav />
+      <WhatsAppButton />
     </div>
   );
 }

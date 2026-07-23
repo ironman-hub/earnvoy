@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import api from "../api/client";
 import ListingCard from "../components/ListingCard.jsx";
 import AirportSelect from "../components/AirportSelect.jsx";
+import SocialLinks from "../components/SocialLinks.jsx";
 
 export default function Feed() {
   const [listings, setListings] = useState([]);
@@ -23,7 +24,7 @@ export default function Feed() {
   return (
     <div className="max-w-6xl mx-auto px-4 pt-8 pb-24 md:pb-8">
       <motion.section
-        className="relative overflow-hidden rounded-2xl bg-ink text-paper px-6 py-10 md:py-14 mb-8"
+        className="relative overflow-hidden rounded-2xl bg-inkDeep text-paper px-6 py-10 md:py-14 mb-8"
         initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
       >
         <motion.div
@@ -86,6 +87,12 @@ export default function Feed() {
         Meet in public places, photograph items, exchange receipts, and use a written agreement.
         Travellers are responsible for checking what they carry; senders remain legally responsible
         for their shipment. Read the full <Link to="/terms" className="underline">terms</Link>.
+      </div>
+
+      {/* Footer with these links is desktop-only, so mobile users get a compact version here */}
+      <div className="md:hidden flex items-center gap-1 mt-6">
+        <span className="text-xs text-ink/40 mr-2">Follow earnvoy:</span>
+        <SocialLinks />
       </div>
     </div>
   );

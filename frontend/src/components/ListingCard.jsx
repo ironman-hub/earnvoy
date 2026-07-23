@@ -51,7 +51,7 @@ export default function ListingCard({ listing, index = 0 }) {
             {dep.toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}
           </span>
           {listing.owner?.isVerifiedBadge && (
-            <span className="hidden sm:inline text-route text-xs bg-route/20 px-2 py-0.5 rounded-full">Verified</span>
+            <span className="hidden sm:inline text-whatsapp text-xs bg-whatsapp/20 px-2 py-0.5 rounded-full">Verified</span>
           )}
           {listing.status && listing.status !== "LIVE" && (
             <span className="text-signal text-xs bg-signal/20 px-2 py-0.5 rounded-full">
@@ -62,7 +62,7 @@ export default function ListingCard({ listing, index = 0 }) {
 
         <div className="text-right">
           {isTraveller && listing.availableSpaceKg ? (
-            <span className="text-route font-display font-bold text-sm sm:text-base whitespace-nowrap">
+            <span className="text-whatsapp font-display font-bold text-sm sm:text-base whitespace-nowrap">
               {listing.availableSpaceKg}kg free
             </span>
           ) : (

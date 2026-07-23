@@ -36,7 +36,7 @@
   }
 
   .badge-verified {
-    @apply inline-flex items-center gap-1 text-route text-xs font-semibold bg-route/10 px-2 py-0.5 rounded-full;
+    @apply inline-flex items-center gap-1 text-whatsapp text-xs font-semibold bg-whatsapp/10 px-2 py-0.5 rounded-full;
   }
 
   .badge-secured {

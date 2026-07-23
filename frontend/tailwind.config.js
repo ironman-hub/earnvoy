@@ -11,6 +11,7 @@ export default {
         route: "#3FB6A8",     // brand teal (from logo) - verified / success accent
         alert: "#D64545",     // errors / warnings
         line: "#DCE1EA",      // hairline borders
+        whatsapp: "#25D366",  // WhatsApp's own brand green - used for Verified badges & weight
       },
       fontFamily: {
         display: ["Bricolage Grotesque", "sans-serif"],

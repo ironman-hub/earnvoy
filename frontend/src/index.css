@@ -2,42 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-  @apply bg-paper text-ink font-body;
-  -webkit-tap-highlight-color: transparent;
+@layer base {
+  html, body {
+    @apply bg-paper text-ink font-body;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1, h2, h3, .display {
+    @apply font-display;
+    letter-spacing: -0.01em;
+  }
+
+  h1 { font-weight: 700; }
+  h2 { font-weight: 600; }
 }
 
-h1, h2, h3, .display {
-  @apply font-display;
-  letter-spacing: -0.01em;
-}
+@layer components {
+  .btn-primary {
+    @apply bg-signal text-inkDeep font-display font-semibold px-5 py-2.5 rounded-md shadow-sm shadow-signal/20 hover:brightness-105 active:scale-95 transition disabled:opacity-50 disabled:cursor-not-allowed;
+    letter-spacing: -0.005em;
+  }
 
-h1 { font-weight: 700; }
-h2 { font-weight: 600; }
+  .btn-secondary {
+    @apply border border-ink/15 text-ink font-medium px-5 py-2.5 rounded-md hover:bg-ink/5 active:scale-95 transition;
+  }
 
-.btn-primary {
-  @apply bg-signal text-inkDeep font-display font-semibold px-5 py-2.5 rounded-md shadow-sm shadow-signal/20 hover:brightness-105 active:scale-95 transition disabled:opacity-50 disabled:cursor-not-allowed;
-  letter-spacing: -0.005em;
-}
+  .card {
+    @apply bg-white border border-line rounded-lg;
+  }
 
-.btn-secondary {
-  @apply border border-ink/15 text-ink font-medium px-5 py-2.5 rounded-md hover:bg-ink/5 active:scale-95 transition;
-}
+  .input {
+    @apply w-full border border-line rounded-md px-3 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-signal/60 focus:border-signal text-base;
+  }
 
-.card {
-  @apply bg-white border border-line rounded-lg;
-}
+  .badge-verified {
+    @apply inline-flex items-center gap-1 text-route text-xs font-semibold bg-route/10 px-2 py-0.5 rounded-full;
+  }
 
-.input {
-  @apply w-full border border-line rounded-md px-3 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-signal/60 focus:border-signal text-base;
-}
-
-.badge-verified {
-  @apply inline-flex items-center gap-1 text-route text-xs font-semibold bg-route/10 px-2 py-0.5 rounded-full;
-}
-
-.badge-secured {
-  @apply inline-flex items-center gap-1 text-signal text-xs font-semibold bg-signal/15 px-2 py-0.5 rounded-full;
+  .badge-secured {
+    @apply inline-flex items-center gap-1 text-signal text-xs font-semibold bg-signal/15 px-2 py-0.5 rounded-full;
+  }
 }
 
 /* Reserve space so content isn't hidden behind the mobile bottom nav */

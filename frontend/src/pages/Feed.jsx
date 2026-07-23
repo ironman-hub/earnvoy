@@ -5,6 +5,7 @@ import api from "../api/client";
 import ListingCard from "../components/ListingCard.jsx";
 import AirportSelect from "../components/AirportSelect.jsx";
 import SocialLinks from "../components/SocialLinks.jsx";
+import Logo from "../components/Logo.jsx";
 
 export default function Feed() {
   const [listings, setListings] = useState([]);
@@ -90,8 +91,8 @@ export default function Feed() {
       </div>
 
       {/* Footer with these links is desktop-only, so mobile users get a compact version here */}
-      <div className="md:hidden flex items-center gap-1 mt-6">
-        <span className="text-xs text-ink/40 mr-2">Follow earnvoy:</span>
+      <div className="md:hidden flex items-center justify-center gap-4 mt-10 pt-6 border-t border-line">
+        <Logo className="text-base opacity-80" />
         <SocialLinks />
       </div>
     </div>

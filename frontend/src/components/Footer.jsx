@@ -11,7 +11,7 @@ export default function Footer() {
           <SocialLinks />
         </div>
         <p className="max-w-xl text-xs text-ink/40 mt-1">
-          earnvoy connects users only - not a courier, escrow, or insurance provider.
+          &copy; 2026 earnvoy.
         </p>
       </div>
     </footer>

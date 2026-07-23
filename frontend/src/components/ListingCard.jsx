@@ -30,9 +30,23 @@ export default function ListingCard({ listing, index = 0 }) {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 text-base sm:text-lg overflow-hidden">
-          <span className="font-semibold">{listing.departureAirport}</span>
+          <div className="flex flex-col leading-tight">
+            <span className="font-semibold">{listing.departureAirport}</span>
+            {listing.departureCountry && (
+              <span className="text-[9px] font-body font-normal normal-case text-paper/40 whitespace-nowrap">
+                {listing.departureCountry}
+              </span>
+            )}
+          </div>
           <span className="text-signal">&rarr;</span>
-          <span className="font-semibold">{listing.destinationAirport}</span>
+          <div className="flex flex-col leading-tight">
+            <span className="font-semibold">{listing.destinationAirport}</span>
+            {listing.destinationCountry && (
+              <span className="text-[9px] font-body font-normal normal-case text-paper/40 whitespace-nowrap">
+                {listing.destinationCountry}
+              </span>
+            )}
+          </div>
           <span className="text-paper/50 text-xs sm:text-sm whitespace-nowrap">
             {dep.toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}
           </span>

@@ -5,9 +5,11 @@ import airports from "../data/airports";
  * props:
  *  - value: IATA code string, e.g. "LHR"
  *  - onChange: (code) => void
+ *  - onSelectAirport: (airport) => void - optional, fires with the full airport
+ *    object {code, city, country, name} when the caller also needs the country
  *  - placeholder
  */
-export default function AirportSelect({ value, onChange, placeholder = "Search airport or city" }) {
+export default function AirportSelect({ value, onChange, onSelectAirport, placeholder = "Search airport or city" }) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(0);
@@ -31,6 +33,7 @@ export default function AirportSelect({ value, onChange, placeholder = "Search a
 
   function pick(airport) {
     onChange(airport.code);
+    if (onSelectAirport) onSelectAirport(airport);
     setQuery("");
     setOpen(false);
   }

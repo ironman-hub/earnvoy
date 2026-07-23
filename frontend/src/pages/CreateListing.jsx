@@ -12,6 +12,7 @@ export default function CreateListing() {
   const [form, setForm] = useState({
     type: "TRAVELLER",
     departureAirport: "", destinationAirport: "",
+    departureCountry: "", destinationCountry: "",
     departureDate: "", arrivalDate: "",
     availableSpaceKg: "", categories: [], incentiveOffer: "", notes: "",
     certifiedNoProhibitedGoods: false,
@@ -87,16 +88,30 @@ export default function CreateListing() {
           ))}
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <AirportSelect value={form.departureAirport} onChange={(v) => setForm({ ...form, departureAirport: v })} placeholder="Departure airport" />
-          <AirportSelect value={form.destinationAirport} onChange={(v) => setForm({ ...form, destinationAirport: v })} placeholder="Destination airport" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <AirportSelect
+            value={form.departureAirport}
+            onChange={(v) => setForm({ ...form, departureAirport: v })}
+            onSelectAirport={(a) => setForm((f) => ({ ...f, departureCountry: a.country }))}
+            placeholder="Departure airport"
+          />
+          <AirportSelect
+            value={form.destinationAirport}
+            onChange={(v) => setForm({ ...form, destinationAirport: v })}
+            onSelectAirport={(a) => setForm((f) => ({ ...f, destinationCountry: a.country }))}
+            placeholder="Destination airport"
+          />
 
-          <label className="text-xs text-ink/50 -mb-2">Departure date</label>
-          <label className="text-xs text-ink/50 -mb-2">Arrival date</label>
-          <input className="input" type="date" value={form.departureDate}
-            onChange={(e) => setForm({ ...form, departureDate: e.target.value })} />
-          <input className="input" type="date" value={form.arrivalDate}
-            onChange={(e) => setForm({ ...form, arrivalDate: e.target.value })} />
+          <div className="space-y-1">
+            <label className="text-xs text-ink/50">Departure date</label>
+            <input className="input" type="date" value={form.departureDate}
+              onChange={(e) => setForm({ ...form, departureDate: e.target.value })} />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs text-ink/50">Arrival date</label>
+            <input className="input" type="date" value={form.arrivalDate}
+              onChange={(e) => setForm({ ...form, arrivalDate: e.target.value })} />
+          </div>
         </div>
 
         {form.type === "TRAVELLER" && (

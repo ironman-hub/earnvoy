@@ -69,12 +69,17 @@ export default function Register() {
             onChange={(e) => setForm({ ...form, password: e.target.value })} />
         </div>
 
-        <label className="flex items-start gap-2 text-sm text-ink/70">
-          <input type="checkbox" className="mt-1" checked={form.acceptedTerms}
+        <label className="flex items-start gap-3 p-3 rounded-md border border-line bg-ink/[0.02] text-sm text-ink/70 leading-relaxed cursor-pointer">
+          <input type="checkbox" className="mt-0.5 w-4 h-4 shrink-0 accent-signal" checked={form.acceptedTerms}
             onChange={(e) => setForm({ ...form, acceptedTerms: e.target.checked })} />
-          I agree to the <Link to="/terms" target="_blank" className="underline">Terms &amp; Conditions</Link>,
-          including that earnvoy only connects users and is not responsible for lost, damaged, or
-          prohibited items.
+          <span>
+            I agree to the{" "}
+            <Link to="/terms" target="_blank" className="text-signal font-medium underline underline-offset-2">
+              Terms &amp; Conditions
+            </Link>
+            , including that earnvoy only connects users and is not responsible for lost, damaged,
+            or prohibited items.
+          </span>
         </label>
 
         {error && <p className="text-alert text-sm">{error}</p>}

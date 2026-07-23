@@ -45,7 +45,21 @@ export default function ListingDetail() {
     >
       <div>
         <span className="text-xs uppercase tracking-wide text-ink/50">{isTraveller ? "Traveller" : "Sender"}</span>
-        <h1 className="text-3xl font-bold font-mono">{listing.departureAirport} &rarr; {listing.destinationAirport}</h1>
+        <h1 className="text-3xl font-bold font-mono flex items-center gap-3">
+          <span className="flex flex-col leading-tight">
+            {listing.departureAirport}
+            {listing.departureCountry && (
+              <span className="text-xs font-body font-normal normal-case text-ink/40">{listing.departureCountry}</span>
+            )}
+          </span>
+          <span className="text-signal">&rarr;</span>
+          <span className="flex flex-col leading-tight">
+            {listing.destinationAirport}
+            {listing.destinationCountry && (
+              <span className="text-xs font-body font-normal normal-case text-ink/40">{listing.destinationCountry}</span>
+            )}
+          </span>
+        </h1>
         <p className="text-ink/60 mt-1">
           {new Date(listing.departureDate).toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })}
           {" -> "}

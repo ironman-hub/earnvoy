@@ -1,6 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { FaWhatsapp } from "react-icons/fa6";
 import { useAuth } from "../context/AuthContext.jsx";
+import SocialLinks from "./SocialLinks.jsx";
+import { SUPPORT_WHATSAPP_LINK } from "../constants/whatsapp.js";
 
 const Icon = {
   feed: (props) => (
@@ -56,14 +59,29 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-line flex"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-line flex flex-col"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <Item to="/" label="Feed" IconCmp={Icon.feed} />
-      <Item to="/create-listing" label="Post" IconCmp={Icon.post} />
-      <Item to="/dashboard" label="Dashboard" IconCmp={Icon.dashboard} />
-      {user?.role === "ADMIN" && <Item to="/admin" label="Admin" IconCmp={Icon.admin} />}
-      <Item to={user ? "/dashboard" : "/login"} label="Account" IconCmp={Icon.account} />
+      <div className="flex items-center justify-center gap-5 py-1.5 border-b border-line/60">
+        <SocialLinks iconClassName="w-4 h-4" />
+        <a
+          href={SUPPORT_WHATSAPP_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat with us on WhatsApp"
+          className="flex items-center justify-center"
+          style={{ color: "#25D366" }}
+        >
+          <FaWhatsapp className="w-4 h-4" />
+        </a>
+      </div>
+      <div className="flex">
+        <Item to="/" label="Feed" IconCmp={Icon.feed} />
+        <Item to="/create-listing" label="Post" IconCmp={Icon.post} />
+        <Item to="/dashboard" label="Dashboard" IconCmp={Icon.dashboard} />
+        {user?.role === "ADMIN" && <Item to="/admin" label="Admin" IconCmp={Icon.admin} />}
+        <Item to={user ? "/dashboard" : "/login"} label="Account" IconCmp={Icon.account} />
+      </div>
     </nav>
   );
 }

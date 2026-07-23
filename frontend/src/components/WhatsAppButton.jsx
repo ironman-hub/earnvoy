@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaWhatsapp } from "react-icons/fa6";
-
-// Support number is only ever embedded in the href below - never rendered as visible text.
-const SUPPORT_WHATSAPP_LINK =
-  "https://wa.me/447377129015?text=" + encodeURIComponent("Hi earnvoy, I need help with...");
+import { SUPPORT_WHATSAPP_LINK } from "../constants/whatsapp.js";
 
 export default function WhatsAppButton() {
   const [hovered, setHovered] = useState(false);
 
   return (
     <div
-      className="fixed z-40 bottom-20 right-4 md:bottom-6 md:right-6"
+      className="hidden md:block fixed z-40 bottom-6 right-6"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >

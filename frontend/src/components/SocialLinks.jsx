@@ -9,7 +9,7 @@ const SOCIALS = [
   { label: "TikTok", href: "https://tiktok.com/@earnvoy", Icon: FaTiktok },
 ];
 
-export default function SocialLinks({ className = "" }) {
+export default function SocialLinks({ className = "", iconClassName = "w-5 h-5" }) {
   return (
     <div className={`flex items-center gap-4 ${className}`}>
       {SOCIALS.map(({ label, href, Icon }) => (
@@ -21,7 +21,7 @@ export default function SocialLinks({ className = "" }) {
           aria-label={`earnvoy on ${label}`}
           className="text-ink/50 hover:text-signal transition"
         >
-          <Icon className="w-5 h-5" />
+          <Icon className={iconClassName} />
         </a>
       ))}
     </div>

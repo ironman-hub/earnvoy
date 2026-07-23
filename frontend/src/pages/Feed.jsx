@@ -83,8 +83,8 @@ export default function Feed() {
       )}
 
       <div className="mt-10 max-w-2xl">
-        <p className="text-xs font-semibold text-ink/60 mb-1">Terms &amp; Conditions</p>
-        <p className="text-xs text-ink/40">
+        <p className="text-xs font-semibold text-ink mb-1">Terms &amp; Conditions</p>
+        <p className="text-xs text-ink">
           earnvoy connects travellers and senders only. We are not a courier, escrow service, payment
           guarantor, or insurance provider, and we don't inspect items or handle customs declarations.
           Meet in public places, photograph items, exchange receipts, and use a written agreement.

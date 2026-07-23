@@ -94,7 +94,7 @@ export default function ListingDetail() {
         )
       )}
 
-      {!user && <p className="text-sm text-ink/60">Log in to unlock this listing's contact details.</p>}
+      {!user && <p className="text-sm text-alert">Log in to unlock this listing's contact details.</p>}
 
       {isOwner && (
         <div className="card p-4">

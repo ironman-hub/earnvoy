@@ -5,6 +5,7 @@ export default {
     extend: {
       colors: {
         ink: "#162F6F",       // brand navy (from logo) - primary text / dark surfaces
+        inkDeep: "#0A1638",   // near-black navy - hero/footer depth, headline emphasis
         paper: "#F4F5F8",     // pale cool-grey background, complements navy
         signal: "#FE5E25",    // brand orange (from logo) - primary CTA
         route: "#3FB6A8",     // brand teal (from logo) - verified / success accent
@@ -12,7 +13,7 @@ export default {
         line: "#DCE1EA",      // hairline borders
       },
       fontFamily: {
-        display: ["Space Grotesk", "sans-serif"],
+        display: ["Bricolage Grotesque", "sans-serif"],
         body: ["Inter", "sans-serif"],
         mono: ["IBM Plex Mono", "monospace"],
       },

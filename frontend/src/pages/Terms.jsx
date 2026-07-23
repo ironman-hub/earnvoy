@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 export default function Terms() {
   return (
-    <div className="max-w-2xl mx-auto px-4 py-12 pb-24 md:pb-12">
-      <h1 className="text-3xl font-bold mb-4">Terms &amp; Conditions</h1>
+    <div className="max-w-2xl mx-auto px-4 py-12 pb-24 md:pb-12 text-center">
+      <h1 className="text-2xl font-bold mb-4">Terms &amp; Conditions</h1>
       <p className="text-sm text-ink/50 mb-8">Last updated 23 July 2026</p>
 
       <h2 className="text-xl font-semibold mt-6 mb-2">1. What earnvoy is</h2>
@@ -16,7 +16,7 @@ export default function Terms() {
       </p>
 
       <h2 className="text-xl font-semibold mt-6 mb-2">2. What earnvoy is not</h2>
-      <ul className="list-disc pl-6 space-y-1">
+      <ul className="list-none space-y-1">
         <li>earnvoy is not a courier.</li>
         <li>earnvoy is not an escrow service.</li>
         <li>earnvoy is not a payment guarantor.</li>
@@ -41,7 +41,7 @@ export default function Terms() {
       </p>
 
       <h2 className="text-xl font-semibold mt-6 mb-2">5. Staying safe</h2>
-      <ul className="list-disc pl-6 space-y-1">
+      <ul className="list-none space-y-1">
         <li>Meet in public places.</li>
         <li>Photograph items before handover.</li>
         <li>Exchange receipts.</li>
@@ -56,7 +56,7 @@ export default function Terms() {
       </p>
 
       <h2 className="text-xl font-semibold mt-6 mb-2">7. Refund policy</h2>
-      <ul className="list-disc pl-6 space-y-1">
+      <ul className="list-none space-y-1">
         <li>If a technical error prevents contact details from being revealed after payment, you get a refund.</li>
         <li>If you change your mind after contact details have been revealed, there is no refund.</li>
         <li>If the listing owner deletes the listing before your unlock request is accepted, you get an automatic refund or credit.</li>

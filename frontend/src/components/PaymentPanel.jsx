@@ -58,13 +58,14 @@ function StripeInnerForm({ paymentId, onDone }) {
  *  - listingId
  *  - amountLabel: "£1.75"
  *  - onDone(payment)
+ *
+ * Stripe-only for now. EcoCash/Paynow support still exists in the backend
+ * (paynowService.js) if you want to re-enable it later once you have a real
+ * Paynow merchant account - just add the method picker UI back here.
  */
 export default function PaymentPanel({ startEndpoint, listingId, amountLabel, onDone }) {
-  const [method, setMethod] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
   const [paymentId, setPaymentId] = useState(null);
-  const [phone, setPhone] = useState("");
-  const [ecocashStatus, setEcocashStatus] = useState(null);
   const [loadingStart, setLoadingStart] = useState(false);
   const [error, setError] = useState("");
 
@@ -75,86 +76,29 @@ export default function PaymentPanel({ startEndpoint, listingId, amountLabel, on
       const res = await api.post(startEndpoint, { listingId, method: "STRIPE" });
       setClientSecret(res.data.clientSecret);
       setPaymentId(res.data.paymentId);
-      setMethod("STRIPE");
     } catch (err) {
       setError(err.response?.data?.error || "Couldn't start payment.");
     }
     setLoadingStart(false);
   }
 
-  async function startEcocash() {
-    if (!phone) { setError("Enter the EcoCash-registered phone number."); return; }
-    setError("");
-    setLoadingStart(true);
-    try {
-      const res = await api.post(startEndpoint, { listingId, method: "ECOCASH", phone });
-      setPaymentId(res.data.paymentId);
-      setMethod("ECOCASH");
-      setEcocashStatus("A payment prompt has been sent to your phone. Approve it, then tap 'I've approved it'.");
-    } catch (err) {
-      setError(err.response?.data?.error || "Couldn't start EcoCash payment.");
-    }
-    setLoadingStart(false);
-  }
-
-  async function checkEcocash() {
-    setLoadingStart(true);
-    try {
-      const res = await api.get(`/payments/${paymentId}/confirm`);
-      if (res.data.payment.status === "SUCCEEDED") {
-        toast.success("Payment confirmed");
-        onDone(res.data.payment);
-      } else {
-        setEcocashStatus("Not confirmed yet - approve the USSD prompt on your phone, then try again.");
-      }
-    } catch (err) {
-      setError("Couldn't check payment status.");
-    }
-    setLoadingStart(false);
-  }
-
-  if (!method) {
+  if (!clientSecret) {
     return (
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="card p-4 space-y-3">
         <p className="text-sm text-ink/70">Amount due: <strong>{amountLabel}</strong></p>
         {error && <p className="text-alert text-sm">{error}</p>}
         <button className="btn-primary w-full" onClick={startStripe} disabled={loadingStart}>
-          Pay by card (Stripe)
-        </button>
-        <div className="flex flex-col sm:flex-row gap-2">
-          <input
-            className="input" placeholder="EcoCash phone number, e.g. 0771234567"
-            value={phone} onChange={(e) => setPhone(e.target.value)}
-          />
-          <button className="btn-secondary whitespace-nowrap" onClick={startEcocash} disabled={loadingStart}>
-            Pay with EcoCash
-          </button>
-        </div>
-      </motion.div>
-    );
-  }
-
-  if (method === "STRIPE" && clientSecret) {
-    return (
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="card p-4">
-        <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <StripeInnerForm paymentId={paymentId} onDone={onDone} />
-        </Elements>
-      </motion.div>
-    );
-  }
-
-  if (method === "ECOCASH") {
-    return (
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="card p-4 space-y-3">
-        <p className="text-sm">{ecocashStatus}</p>
-        {error && <p className="text-alert text-sm">{error}</p>}
-        <button className="btn-primary w-full" onClick={checkEcocash} disabled={loadingStart}>
-          I've approved it - check status
+          {loadingStart ? "Starting..." : "Pay by card (Stripe)"}
         </button>
       </motion.div>
     );
   }
 
-  return null;
+  return (
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="card p-4">
+      <Elements stripe={stripePromise} options={{ clientSecret }}>
+        <StripeInnerForm paymentId={paymentId} onDone={onDone} />
+      </Elements>
+    </motion.div>
+  );
 }

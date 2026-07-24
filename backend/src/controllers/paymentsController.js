@@ -10,6 +10,9 @@ const { logEvent } = require("../services/auditService");
 async function startListingFeePayment(req, res, next) {
   try {
     const { listingId, method, phone } = req.body;
+    if (method !== "STRIPE") {
+      return res.status(400).json({ error: "Only card payments (Stripe) are supported right now." });
+    }
     const listing = await prisma.listing.findUnique({ where: { id: listingId } });
     if (!listing || listing.ownerId !== req.user.id) return res.status(404).json({ error: "Listing not found." });
     if (listing.listingFeePaid) return res.status(409).json({ error: "This listing's fee has already been paid." });
@@ -25,35 +28,18 @@ async function startListingFeePayment(req, res, next) {
       },
     });
 
-    if (method === "STRIPE") {
-      let customerId = req.user.stripeCustomerId;
-      if (!customerId) {
-        customerId = await stripeService.createCustomer(req.user);
-        await prisma.user.update({ where: { id: req.user.id }, data: { stripeCustomerId: customerId } });
-      }
-      const intent = await stripeService.createPaymentIntent({
-        amountGbp: config.fees.listingFeeGbp,
-        metadata: { paymentId: payment.id, kind: "LISTING_FEE" },
-        customerId,
-      });
-      await prisma.payment.update({ where: { id: payment.id }, data: { stripePaymentIntentId: intent.id } });
-      return res.json({ paymentId: payment.id, clientSecret: intent.client_secret });
+    let customerId = req.user.stripeCustomerId;
+    if (!customerId) {
+      customerId = await stripeService.createCustomer(req.user);
+      await prisma.user.update({ where: { id: req.user.id }, data: { stripeCustomerId: customerId } });
     }
-
-    if (method === "ECOCASH") {
-      if (!phone) return res.status(400).json({ error: "Phone number required for EcoCash." });
-      const result = await paynowService.initiateEcocashPayment({
-        reference: payment.id,
-        amountGbp: config.fees.listingFeeGbp,
-        phone,
-        description: "earnvoy listing fee",
-        userEmail: req.user.email,
-      });
-      await prisma.payment.update({ where: { id: payment.id }, data: { paynowPollUrl: result.pollurl } });
-      return res.json({ paymentId: payment.id, paynow: result });
-    }
-
-    res.status(400).json({ error: "Unsupported payment method." });
+    const intent = await stripeService.createPaymentIntent({
+      amountGbp: config.fees.listingFeeGbp,
+      metadata: { paymentId: payment.id, kind: "LISTING_FEE" },
+      customerId,
+    });
+    await prisma.payment.update({ where: { id: payment.id }, data: { stripePaymentIntentId: intent.id } });
+    return res.json({ paymentId: payment.id, clientSecret: intent.client_secret });
   } catch (err) {
     next(err);
   }
@@ -62,6 +48,9 @@ async function startListingFeePayment(req, res, next) {
 async function startUnlockPayment(req, res, next) {
   try {
     const { listingId, method, phone } = req.body;
+    if (method !== "STRIPE") {
+      return res.status(400).json({ error: "Only card payments (Stripe) are supported right now." });
+    }
     const listing = await prisma.listing.findUnique({ where: { id: listingId } });
     if (!listing || !listing.listingFeePaid) return res.status(404).json({ error: "Listing not found." });
     if (listing.ownerId === req.user.id) return res.status(400).json({ error: "You can't unlock your own listing." });
@@ -83,35 +72,18 @@ async function startUnlockPayment(req, res, next) {
       },
     });
 
-    if (method === "STRIPE") {
-      let customerId = req.user.stripeCustomerId;
-      if (!customerId) {
-        customerId = await stripeService.createCustomer(req.user);
-        await prisma.user.update({ where: { id: req.user.id }, data: { stripeCustomerId: customerId } });
-      }
-      const intent = await stripeService.createPaymentIntent({
-        amountGbp: config.fees.unlockFeeGbp,
-        metadata: { paymentId: payment.id, kind: "UNLOCK_FEE" },
-        customerId,
-      });
-      await prisma.payment.update({ where: { id: payment.id }, data: { stripePaymentIntentId: intent.id } });
-      return res.json({ paymentId: payment.id, clientSecret: intent.client_secret });
+    let customerId = req.user.stripeCustomerId;
+    if (!customerId) {
+      customerId = await stripeService.createCustomer(req.user);
+      await prisma.user.update({ where: { id: req.user.id }, data: { stripeCustomerId: customerId } });
     }
-
-    if (method === "ECOCASH") {
-      if (!phone) return res.status(400).json({ error: "Phone number required for EcoCash." });
-      const result = await paynowService.initiateEcocashPayment({
-        reference: payment.id,
-        amountGbp: config.fees.unlockFeeGbp,
-        phone,
-        description: "earnvoy contact unlock fee",
-        userEmail: req.user.email,
-      });
-      await prisma.payment.update({ where: { id: payment.id }, data: { paynowPollUrl: result.pollurl } });
-      return res.json({ paymentId: payment.id, paynow: result });
-    }
-
-    res.status(400).json({ error: "Unsupported payment method." });
+    const intent = await stripeService.createPaymentIntent({
+      amountGbp: config.fees.unlockFeeGbp,
+      metadata: { paymentId: payment.id, kind: "UNLOCK_FEE" },
+      customerId,
+    });
+    await prisma.payment.update({ where: { id: payment.id }, data: { stripePaymentIntentId: intent.id } });
+    return res.json({ paymentId: payment.id, clientSecret: intent.client_secret });
   } catch (err) {
     next(err);
   }

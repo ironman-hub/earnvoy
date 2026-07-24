@@ -33,7 +33,7 @@ export default function Feed() {
           animate={{ scale: [1, 1.15, 1] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
         <h1 className="text-3xl md:text-5xl font-bold font-display max-w-xl relative">
-          Spare kilos. Somewhere to send it. <span className="text-signal">Earn while you travel.</span>
+          Spare kilos? Somewhere to send it? <span className="text-signal">Earn while you travel...</span>
         </h1>
         <p className="text-paper/70 mt-3 max-w-md relative">
           Travellers list their extra baggage space, senders list what they need carried -

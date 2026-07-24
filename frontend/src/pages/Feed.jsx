@@ -11,12 +11,22 @@ export default function Feed() {
   const [listings, setListings] = useState([]);
   const [filters, setFilters] = useState({ type: "", departureAirport: "", destinationAirport: "", category: "", fromDate: "" });
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
   async function load(f = filters) {
     setLoading(true);
-    const params = Object.fromEntries(Object.entries(f).filter(([, v]) => v));
-    const res = await api.get("/listings/feed", { params });
-    setListings(res.data.listings);
+    setLoadError("");
+    try {
+      const params = Object.fromEntries(Object.entries(f).filter(([, v]) => v));
+      const res = await api.get("/listings/feed", { params });
+      setListings(res.data.listings);
+    } catch (err) {
+      setLoadError(
+        err.response
+          ? err.response.data?.error || "Couldn't load the feed."
+          : "Couldn't reach the server - please check your connection and try again."
+      );
+    }
     setLoading(false);
   }
 
@@ -71,6 +81,11 @@ export default function Feed() {
           {[0, 1, 2].map((i) => (
             <div key={i} className="h-14 rounded-md bg-ink/5 animate-pulse" />
           ))}
+        </div>
+      ) : loadError ? (
+        <div className="card p-10 text-center space-y-3">
+          <p className="text-alert text-sm">{loadError}</p>
+          <button className="btn-secondary" onClick={() => load()}>Try again</button>
         </div>
       ) : listings.length === 0 ? (
         <div className="card p-10 text-center text-ink/50">

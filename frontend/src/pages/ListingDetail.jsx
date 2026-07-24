@@ -80,6 +80,9 @@ export default function ListingDetail() {
             <span key={c} className="text-xs bg-ink/5 px-2 py-0.5 rounded-full">{c}</span>
           ))}
         </div>
+        {listing.categories?.includes("OTHER") && listing.otherCategoryDetail && (
+          <p className="text-sm text-ink/70 mt-1">"Other" specified as: {listing.otherCategoryDetail}</p>
+        )}
       </div>
 
       {hasContact ? (

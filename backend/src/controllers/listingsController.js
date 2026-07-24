@@ -56,6 +56,7 @@ async function createListing(req, res, next) {
         arrivalDate: new Date(data.arrivalDate),
         availableSpaceKg: data.availableSpaceKg,
         categories: data.categories,
+        otherCategoryDetail: data.categories.includes("OTHER") ? data.otherCategoryDetail : null,
         incentiveOffer: data.incentiveOffer,
         notes: data.notes,
         certifiedNoProhibitedGoods: data.certifiedNoProhibitedGoods,

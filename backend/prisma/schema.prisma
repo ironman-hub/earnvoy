@@ -128,6 +128,8 @@ model Listing {
   availableSpaceKg    Float?
 
   categories          ItemCategory[]
+  // Required detail when "OTHER" is one of the selected categories - what is it, specifically?
+  otherCategoryDetail String?
 
   // Sender-only: an incentive/reward offered to attract a traveller
   incentiveOffer      String?

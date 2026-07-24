@@ -25,12 +25,16 @@ const createListingSchema = z.object({
   categories: z.array(z.enum([
     "DOCUMENTS", "CLOTHING", "ELECTRONICS", "GIFTS", "FOOD", "MEDICINES", "FRAGILE", "OTHER",
   ])).min(1),
+  otherCategoryDetail: z.string().max(200).optional(),
   incentiveOffer: z.string().max(280).optional(),
   notes: z.string().max(500).optional(),
   certifiedNoProhibitedGoods: z.literal(true, {
     errorMap: () => ({ error: "You must certify your package contains no prohibited or illegal goods." }),
   }),
-});
+}).refine(
+  (data) => !data.categories.includes("OTHER") || (data.otherCategoryDetail && data.otherCategoryDetail.trim().length > 0),
+  { message: "Describe what 'Other' refers to.", path: ["otherCategoryDetail"] }
+);
 
 const unlockContactSchema = z.object({
   listingId: z.string().uuid(),

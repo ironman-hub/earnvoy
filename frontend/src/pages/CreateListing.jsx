@@ -14,7 +14,7 @@ export default function CreateListing() {
     departureAirport: "", destinationAirport: "",
     departureCountry: "", destinationCountry: "",
     departureDate: "", arrivalDate: "",
-    availableSpaceKg: "", categories: [], incentiveOffer: "", notes: "",
+    availableSpaceKg: "", categories: [], otherCategoryDetail: "", incentiveOffer: "", notes: "",
     certifiedNoProhibitedGoods: false,
   });
   const [listingId, setListingId] = useState(null);
@@ -41,6 +41,10 @@ export default function CreateListing() {
     }
     if (form.categories.length === 0) {
       setError("Select at least one item category.");
+      return;
+    }
+    if (form.categories.includes("OTHER") && !form.otherCategoryDetail.trim()) {
+      setError("Describe what 'Other' refers to.");
       return;
     }
     setLoading(true);
@@ -137,6 +141,16 @@ export default function CreateListing() {
               </button>
             ))}
           </div>
+          {form.categories.includes("OTHER") && (
+            <div className="mt-2">
+              <label className="text-xs text-ink/50 block mb-1">
+                {form.type === "TRAVELLER" ? "What kind of items would fall under 'Other'?" : "What exactly are you sending?"}
+              </label>
+              <input className="input" placeholder="e.g. musical instrument, car part, artwork"
+                value={form.otherCategoryDetail}
+                onChange={(e) => setForm({ ...form, otherCategoryDetail: e.target.value })} />
+            </div>
+          )}
         </div>
 
         <textarea className="input" placeholder="Notes (optional)" value={form.notes}

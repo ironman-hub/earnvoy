@@ -2,7 +2,12 @@
 // Run `npx prisma migrate dev --name init` after setting DATABASE_URL in .env
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // Alpine Linux (our Docker base image) ships OpenSSL 3.x, but Prisma's
+  // autodetection sometimes defaults to fetching an OpenSSL 1.1.x-compatible
+  // engine anyway, which then fails to load at runtime. Pinning this
+  // explicitly avoids that guesswork entirely.
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
